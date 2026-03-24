@@ -493,7 +493,6 @@ function loadState(){
   const cm=getMK();if(!s.mh||s.mh.mk!==cm)s.mh={mk:cm,done:{}};
   return s;
 }
-function sv(){localStorage.setItem('bio_q_v2',JSON.stringify(state));}
 let state=loadState();
 
 // UTILS
