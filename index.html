@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quest Log — Biomedical Instrumentation Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0c0b;--bg2:#161513;--bg3:#1e1c1a;--bg4:#252220;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#e2dfd7;--text2:#8c8880;--text3:#5a5750;--amber:#e8a020;--amber-d:rgba(232,160,32,0.12);--amber-b:rgba(232,160,32,0.28);--teal:#1a9e75;--teal-d:rgba(26,158,117,0.1);--teal-b:rgba(26,158,117,0.28);--blue:#3a82c8;--blue-d:rgba(58,130,200,0.1);--blue-b:rgba(58,130,200,0.28);--red:#c04848;--red-d:rgba(192,72,72,0.1);--red-b:rgba(192,72,72,0.28);}
+[data-theme="light"]{--bg:#f7f5f0;--bg2:#edeae0;--bg3:#e3dfd3;--bg4:#d8d4c8;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);--text:#1a1a18;--text2:#5a5750;--text3:#8c8880;--amber:#a06010;--amber-d:rgba(160,96,16,0.09);--amber-b:rgba(160,96,16,0.25);--teal:#0a6e4a;--teal-d:rgba(10,110,74,0.08);--teal-b:rgba(10,110,74,0.25);--blue:#1a5fa0;--blue-d:rgba(26,95,160,0.08);--blue-b:rgba(26,95,160,0.25);--red:#a02828;--red-d:rgba(160,40,40,0.08);--red-b:rgba(160,40,40,0.25);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.hdr{border-bottom:1px solid var(--border);padding:1.25rem 2rem 0;background:var(--bg);position:sticky;top:0;z-index:100;}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap;}
+.hdr-left .lbl{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;margin-bottom:3px;}
+.hdr-left .name{font-size:20px;font-weight:800;}
+.hdr-left .ttl{font-size:12px;color:var(--amber);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.lv-badge{display:inline-flex;align-items:center;gap:5px;background:var(--amber-d);border:1px solid var(--amber-b);border-radius:6px;padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);}
+.xp-wrap{min-width:160px;}
+.xp-bar-bg{height:5px;background:var(--bg4);border-radius:99px;overflow:hidden;margin-bottom:3px;}
+.xp-bar-fill{height:100%;background:var(--amber);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.xp-lbl{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.icon-btn{width:32px;height:32px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;}
+.icon-btn:hover{background:var(--bg4);color:var(--text);}
+.tab-nav{display:flex;margin:0 -2rem;overflow-x:auto;}
+.tb{padding:9px 15px;font-size:12px;font-weight:700;color:var(--text3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;font-family:'Syne',sans-serif;white-space:nowrap;}
+.tb:hover{color:var(--text);}
+.tb.active{color:var(--amber);border-bottom-color:var(--amber);}
+.tc{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:15px;padding:0 3px;border-radius:99px;font-size:9px;background:var(--bg3);color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-left:4px;}
+.tb.active .tc{background:var(--amber-d);color:var(--amber);}
+.content{padding:1.5rem 2rem 4rem;max-width:900px;}
+.panel{display:none;}
+.panel.active{display:block;}
+.stats-row{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;}
+.stat-c{flex:1;min-width:85px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;}
+.sl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'IBM Plex Mono',monospace;margin-bottom:3px;}
+.sv{font-size:20px;font-weight:800;}
+.sv span{font-size:11px;font-weight:400;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.fase-g{margin-bottom:1.75rem;}
+.fase-hdr{display:flex;align-items:center;gap:8px;margin-bottom:.6rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.fase-ttl{font-size:13px;font-weight:700;}
+.fase-sem{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-left:auto;}
+.fase-prg{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.q-list{display:flex;flex-direction:column;gap:5px;}
+.q{display:flex;align-items:flex-start;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;cursor:pointer;transition:all .15s;user-select:none;}
+.q:hover{border-color:var(--border2);background:var(--bg3);}
+.q.done{border-color:var(--teal-b);background:var(--teal-d);}
+.q-chk{width:19px;height:19px;border-radius:5px;flex-shrink:0;border:1.5px solid var(--border2);background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px;}
+.q.done .q-chk{background:var(--teal);border-color:var(--teal);}
+.q-chk svg{opacity:0;transition:opacity .15s;}
+.q.done .q-chk svg{opacity:1;}
+.q-body{flex:1;min-width:0;}
+.q-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+.q.done .q-name{color:var(--text3);text-decoration:line-through;text-decoration-color:var(--text3);}
+.q-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+.q-r{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.q-xp{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);background:var(--amber-d);border:1px solid var(--amber-b);border-radius:5px;padding:2px 7px;white-space:nowrap;}
+.q.done .q-xp{color:var(--text3);background:transparent;border-color:transparent;}
+.q-tag{font-size:9px;font-family:'IBM Plex Mono',monospace;padding:1px 6px;border-radius:4px;color:var(--text3);border:1px solid var(--border);}
+.t-ms{color:var(--amber);border-color:var(--amber-b);background:var(--amber-d);}
+.t-boss{color:var(--red);border-color:var(--red-b);background:var(--red-d);}
+.t-done{color:var(--teal);border-color:var(--teal-b);background:var(--teal-d);}
+.sec-lbl{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin:1.25rem 0 .6rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;}
+.ach{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px;}
+.ach.ul{border-color:var(--amber-b);background:var(--amber-d);}
+.ach-ico{font-size:24px;margin-bottom:7px;}
+.ach-name{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:3px;}
+.ach.ul .ach-name{color:var(--amber);}
+.ach-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+.ach-st{font-size:10px;color:var(--text3);margin-top:6px;font-family:'IBM Plex Mono',monospace;}
+.ach.ul .ach-st{color:var(--teal);}
+.res-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
+.rf{padding:5px 11px;border-radius:99px;font-size:11px;font-weight:700;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:4px;}
+.rf.active{background:var(--bg3);color:var(--text);}
+.rf:hover:not(.active){color:var(--text2);}
+.btn-cat-del{background:none; border:none; color:var(--red); cursor:pointer; font-size:10px; opacity:0.6; padding:0 2px;}
+.btn-cat-del:hover{opacity:1;}
+.res-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem;}
+.res-card{display:flex;align-items:flex-start;gap:11px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;}
+.res-cat { font-size:9px; font-weight:700; padding:2px 8px; border-radius:99px; font-family:'IBM Plex Mono',monospace; flex-shrink:0; margin-top:2px; }
+
+/* Warna Spesifik Kategori */
+.cat-buku { background:#EAF3DE; color:#2a5a08; }
+.cat-paper { background:#EEEDFE; color:#3C3489; }
+.cat-video { background:#FAECE7; color:#8a2010; }
+.cat-tool { background:#E6F1FB; color:#0c4a80; }
+.cat-kursus { background:#faeeda; color:#6a3a06; }
+.cat-podcast { background:#f3e8ff; color:#6b21a8; }
+
+/* Gaya Tombol Hapus */
+.btn-item-del { position:absolute; top:8px; right:8px; background:none; border:none; color:var(--red); font-size:16px; cursor:pointer; opacity:0.3; transition:opacity 0.15s; z-index:10; }
+.btn-item-edit { position:absolute; top:8px; right:30px; background:none; border:none; color:var(--amber); font-size:14px; cursor:pointer; opacity:0.3; transition:opacity 0.15s; z-index: 10; }
+.btn-item-edit:hover { opacity:1; }
+.btn-item-del:hover { opacity:1; }
+.res-card, .ach { position: relative; }.res-body{flex:1;min-width:0;}
+.res-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+.res-src{font-size:11px;color:var(--text3);margin-bottom:5px;}
+.res-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.res-status{font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 8px;border-radius:99px;border:1px solid var(--border2);cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;}
+.res-status.reading{color:var(--amber);border-color:var(--amber-b);background:var(--amber-d);}
+.res-status.done{color:var(--teal);border-color:var(--teal-b);background:var(--teal-d);}
+.stars{display:flex;gap:1px;}
+.star{font-size:13px;cursor:pointer;color:var(--text3);transition:color .1s;line-height:1;}
+.star.lit{color:var(--amber);}
+.res-fase{font-size:9px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.add-form{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px;display:none;margin-top:10px;margin-bottom:10px;}
+.add-form.open{display:block;}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.form-row input,.form-row select,.form-row textarea{flex:1;min-width:140px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'Syne',sans-serif;font-size:12px;padding:7px 10px;border-radius:7px;outline:none;}
+.form-row input:focus,.form-row select:focus{border-color:var(--amber);}
+.btn-submit{padding:7px 16px;border-radius:7px;background:var(--amber-d);border:1px solid var(--amber-b);color:var(--amber);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-submit:hover{background:var(--amber);color:var(--bg);}
+.btn-open{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;background:transparent;border:1px solid var(--border2);color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-open:hover{border-color:var(--amber-b);color:var(--amber);}
+.ipk-bar{background:var(--bg2);border:1px solid var(--amber-b);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:12px;}
+.ipk-big{font-size:30px;font-weight:800;font-family:'IBM Plex Mono',monospace;}
+.ipk-big.good{color:var(--teal);}
+.ipk-big.mid{color:var(--amber);}
+.ipk-big.bad{color:var(--red);}
+.ipk-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+.ipk-info{font-size:12px;color:var(--text2);font-family:'IBM Plex Mono',monospace;}
+.sem-block{margin-bottom:10px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.sem-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;user-select:none;transition:background .15s;}
+.sem-hdr:hover{background:var(--bg3);}
+.sem-l{display:flex;align-items:center;gap:10px;}
+.sem-name{font-size:13px;font-weight:700;}
+.sem-ips-val{font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--text2);}
+.sem-ips-val.good{color:var(--teal);}
+.sem-ips-val.mid{color:var(--amber);}
+.sem-ips-val.bad{color:var(--red);}
+.sem-arr{font-size:10px;color:var(--text3);transition:transform .2s;}
+.sem-block.open .sem-arr{transform:rotate(180deg);}
+.sem-body{display:none;border-top:1px solid var(--border);}
+.sem-block.open .sem-body{display:block;}
+.c-row{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);}
+.c-row:last-child{border-bottom:none;}
+.c-name{flex:1;font-size:12px;}
+.c-name.retake{color:var(--amber);}
+.c-sks{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;width:40px;text-align:right;}
+.g-sel{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 6px;border-radius:6px;cursor:pointer;outline:none;transition:border-color .15s;}
+.g-sel:focus{border-color:var(--amber);}
+.g-sel.g-a{color:#1a9e75;}.g-sel.g-ab{color:#5ab878;}.g-sel.g-b{color:#3a82c8;}.g-sel.g-bc{color:#8b6dc8;}.g-sel.g-c{color:#e8a020;}.g-sel.g-d{color:#c04848;}.g-sel.g-e{color:#8c3030;}
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:12px;margin-bottom:1.5rem;}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.chart-ttl{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;font-family:'IBM Plex Mono',monospace;}
+.chart-wrap{position:relative;height:180px;}
+.habit-section{margin-top:1.25rem;}
+.week-lbl-txt{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-bottom:.7rem;}
+.habit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-bottom:1rem;}
+.h-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;transition:all .15s;}
+.h-card.done{border-color:var(--teal-b);background:var(--teal-d);}
+.h-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.h-name{font-size:13px;font-weight:700;}
+.h-streak{font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;background:var(--amber-d);border:1px solid var(--amber-b);padding:1px 6px;border-radius:99px;}
+.h-desc{font-size:11px;color:var(--text3);margin-bottom:7px;line-height:1.4;}
+.h-pb-bg{height:4px;background:var(--bg4);border-radius:99px;overflow:hidden;margin-bottom:5px;}
+.h-pb-fill{height:100%;background:var(--teal);border-radius:99px;transition:width .3s;}
+.h-prog{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;display:flex;justify-content:space-between;margin-bottom:7px;}
+.h-btns{display:flex;gap:5px;}
+.h-btn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Syne',sans-serif;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
+.h-btn.plus{border-color:var(--teal-b);color:var(--teal);}
+.h-btn.plus:hover{background:var(--teal-d);}
+.monthly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:8px;}
+.m-card{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;cursor:pointer;transition:all .15s;user-select:none;}
+.m-card:hover{border-color:var(--border2);}
+.m-card.done{border-color:var(--teal-b);background:var(--teal-d);}
+.m-chk{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.m-card.done .m-chk{background:var(--teal);border-color:var(--teal);}
+.m-name{font-size:12px;font-weight:700;}
+.m-card.done .m-name{color:var(--text3);text-decoration:line-through;}
+.xp-popup{position:fixed;bottom:2rem;right:2rem;background:var(--bg3);border:1px solid var(--amber-b);border-radius:10px;padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--amber);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:999;}
+.xp-popup.show{transform:translateY(0);opacity:1;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);opacity:0;pointer-events:none;z-index:998;transition:opacity .3s;}
+.overlay.show{opacity:1;pointer-events:all;}
+.lvup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.85);background:var(--bg3);border:1px solid var(--amber-b);border-radius:16px;padding:2rem 2.5rem;text-align:center;opacity:0;pointer-events:none;z-index:999;transition:all .3s cubic-bezier(.4,0,.2,1);}
+.lvup.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:all;}
+.lvup h2{font-size:26px;font-weight:800;color:var(--amber);margin-bottom:4px;}
+.lvup p{font-size:13px;color:var(--text2);}
+.lvup .new-t{font-size:15px;font-weight:700;margin-top:8px;}
+.lvup-btn{margin-top:1.25rem;padding:8px 20px;background:var(--amber-d);border:1px solid var(--amber-b);border-radius:8px;color:var(--amber);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.sync-modal{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center;}
+.sync-modal.show{display:flex;}
+.sync-content{background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px; width:90%; max-width:450px; position:relative;}
+#sync-data:focus{border-color:var(--amber);}
+.pomodoro-widget{position:fixed; bottom:2rem; left:2rem; background:var(--bg3); border:1px solid var(--amber-b); border-radius:12px; padding:15px; width:140px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.3); z-index:900;}
+.pomo-hdr{font-size:10px; font-weight:700; color:var(--text3); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;}
+.pomo-time{font-family:'IBM Plex Mono',monospace; font-size:32px; font-weight:800; color:var(--amber); margin-bottom:10px; line-height:1;}
+.pomo-ctrls{display:flex; gap:8px; justify-content:center;}
+.btn-item-del { position:absolute; top:8px; right:8px; background:none; border:none; color:var(--red); font-size:16px; cursor:pointer; opacity:0.3; transition:opacity 0.15s; z-index: 10; }
+.btn-item-del:hover { opacity:1; }
+.res-card, .ach { position: relative; }
+/* Gaya Pop-up Manage Kategori */
+.cm-item { display:flex; justify-content:space-between; align-items:center; background:var(--bg3); padding:8px 12px; border-radius:8px; border:1px solid var(--border2); }
+.cm-item-name { font-size:13px; font-weight:600; color:var(--text); }
+.cm-actions { display:flex; gap:5px; }
+.cm-btn { background:none; border:1px solid var(--border2); border-radius:5px; color:var(--text2); font-size:11px; cursor:pointer; padding:4px 8px; transition:all 0.15s; }
+.cm-btn:hover { background:var(--bg4); color:var(--text); }
+.cm-btn.del:hover { background:var(--red-d); color:var(--red); border-color:var(--red-b); }
+@media(max-width:560px){.hdr,.content{padding-left:1rem;padding-right:1rem;}.tab-nav{margin:0 -1rem;}.chart-grid{grid-template-columns:1fr;}.pomodoro-widget{bottom:1rem; left:1rem; padding:12px; width:120px;}.pomo-time{font-size:26px;}}
+@media print{.hdr{position:static;border:none;}.tab-nav,.icon-btn,.res-filters,.btn-open,.h-btns,.g-sel,.add-form,.pomodoro-widget{display:none!important;}.panel{display:block!important;}body{background:#fff;color:#000;}.sem-body{display:block!important;}.chart-wrap{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-left">
+      <div class="lbl">Quest Log · Tekdok ITS</div>
+      <div class="name">Engineer</div>
+      <div class="ttl" id="player-title">Mahasiswa Baru</div>
+    </div>
+    <div class="hdr-right">
+      <div class="lv-badge">LV <span id="lv-num">1</span></div>
+      <div class="xp-wrap">
+        <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+        <div class="xp-lbl" id="xp-lbl">0 / 200 XP</div>
+      </div>
+      <button class="icon-btn" id="theme-btn" title="Toggle tema" onclick="toggleTheme()">☀</button>
+      <button class="icon-btn" title="Sync Data" onclick="toggleSyncMenu()">🔄</button>
+    </div>
+  </div>
+  <div class="tab-nav" id="tab-nav"></div>
+</div>
+
+<div class="content">
+  <div class="panel active" id="p-main">
+    <div class="stats-row" id="main-stats"></div>
+    <div id="main-cont"></div>
+  </div>
+  <div class="panel" id="p-side">
+    <div class="sec-lbl">Side Quests — Kegiatan & Pengembangan Diri</div>
+    <div class="q-list" id="side-cont"></div>
+  </div>
+  <div class="panel" id="p-ach">
+    <div class="sec-lbl">Achievements</div>
+    <div class="ach-grid" id="ach-cont"></div>
+  </div>
+  <div class="panel" id="p-res">
+    <div class="sec-lbl">Resource Log</div>
+    <div class="res-filters" id="res-filters"></div>
+    <div class="res-list" id="res-list"></div>
+    <button class="btn-open" onclick="toggleAddForm()">+ Tambah Resource</button>
+    <div class="add-form" id="add-form">
+      <div class="form-row">
+        <input id="ri-title" placeholder="Judul / nama resource" />
+        <select id="ri-cat"></select>
+      </div>
+      <div class="form-row">
+        <input id="ri-src" placeholder="Penulis / sumber (opsional)" />
+        <select id="ri-fase"><option value="Fase 1">Fase 1</option><option value="Fase 2">Fase 2</option><option value="Fase 3">Fase 3</option><option value="Fase 4">Fase 4</option><option value="General">General</option></select>
+      </div>
+      <button class="btn-submit" onclick="addResource()">Tambah ke Library</button>
+    </div>
+  </div>
+  <div class="panel" id="p-courses">
+    <div class="ipk-bar" id="ipk-bar"></div>
+    <div class="sec-lbl">Nilai per Semester — klik untuk buka/tutup</div>
+    <div id="courses-cont"></div>
+  </div>
+  <div class="panel" id="p-proj">
+    <div class="sec-lbl">Electronics & Hardware Projects</div>
+    <div class="res-filters" id="proj-filters"></div>
+    <div class="ach-grid" id="proj-list" style="margin-bottom:1rem;"></div>
+    <button class="btn-open" onclick="toggleProjForm()">+ Tambah Project</button>
+    <div class="add-form" id="proj-form">
+      <div class="form-row">
+        <input id="pi-title" placeholder="Nama / Judul Project" />
+        <input id="pi-ico" placeholder="Icon (Emoji)" style="max-width:100px;" />
+      </div>
+      <div class="form-row">
+        <input id="pi-desc" placeholder="Deskripsi atau tujuan proyek" style="flex:2;" />
+        <select id="pi-cat"></select>
+      </div>
+      <button class="btn-submit" onclick="addProject()">Simpan Project</button>
+    </div>
+  </div>
+  <div class="panel" id="p-stats">
+    <div class="sec-lbl">Progress Overview</div>
+    <div class="chart-grid">
+      <div class="chart-card"><div class="chart-ttl">Quest Completion</div><div class="chart-wrap"><canvas id="ch-quests"></canvas></div></div>
+      <div class="chart-card"><div class="chart-ttl">XP per Fase</div><div class="chart-wrap"><canvas id="ch-xp"></canvas></div></div>
+      <div class="chart-card"><div class="chart-ttl">IP per Semester</div><div class="chart-wrap"><canvas id="ch-ip"></canvas></div></div>
+      <div class="chart-card"><div class="chart-ttl">Status Resource</div><div class="chart-wrap"><canvas id="ch-res"></canvas></div></div>
+    </div>
+    <div class="habit-section">
+      <div class="sec-lbl" style="margin-top:0; display:flex; align-items:center; gap:8px;">
+        Weekly Habits
+        <button class="rf" onclick="addNewHabit('weekly')" style="padding:2px 8px; font-size:10px; margin:0;">+ Add</button>
+      </div>
+      <div class="week-lbl-txt" id="week-lbl"></div>
+      <div class="habit-grid" id="habit-grid"></div>
+      
+      <div class="sec-lbl" style="display:flex; align-items:center; gap:8px; margin-top:1.5rem;">
+        Monthly Check-in
+        <button class="rf" onclick="addNewHabit('monthly')" style="padding:2px 8px; font-size:10px; margin:0;">+ Add</button>
+      </div>
+      <div class="monthly-grid" id="monthly-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="xp-popup" id="xp-popup"></div>
+<div class="overlay" id="overlay" onclick="closeAllModals()"></div>
+<div class="lvup" id="lvup">
+  <div style="font-size:36px;margin-bottom:8px">⬆</div>
+  <h2>Level Up!</h2><p>Kamu naik ke</p>
+  <div class="new-t" id="lvup-t"></div>
+  <button class="lvup-btn" onclick="closeLvUp()">Lanjutkan</button>
+</div>
+
+<div class="sync-modal" id="sync-modal">
+  <div class="sync-content">
+    <h3 style="margin-bottom:8px;">Data Sync</h3>
+    <p style="font-size:12px; color:var(--text3); margin-bottom:10px;">Copy teks di bawah untuk Export, atau Paste teks untuk Import.</p>
+    <textarea id="sync-data" rows="6" style="width:100%; background:var(--bg3); color:var(--text); border:1px solid var(--border2); border-radius:6px; padding:10px; font-family:monospace; margin-bottom:10px; outline:none;"></textarea>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-submit" onclick="exportData()">Generate Export</button>
+      <button class="btn-submit" style="background:var(--teal-d); border-color:var(--teal-b); color:var(--teal);" onclick="importData()">Import Data</button>
+      <button class="btn-open" onclick="toggleSyncMenu()">Tutup</button>
+    </div>
+    <div id="sync-msg" style="margin-top:10px; font-size:11px;"></div>
+  </div>
+</div>
+
+<div class="sync-modal" id="proj-detail-modal">
+  <div class="sync-content" style="max-width:600px; max-height:85vh; overflow-y:auto;">
+    <h3 id="pd-title" style="color:var(--amber);">Project Detail</h3>
+    <p id="pd-cat" style="font-size:11px; color:var(--text3); margin-bottom:15px;"></p>
+    <div class="sec-lbl">Catatan Progress / Step-by-Step</div>
+    <textarea id="pd-notes" rows="8" placeholder="Tuliskan step pembuatan, kendala, atau hasil di sini..." style="width:100%; background:var(--bg3); color:var(--text); border:1px solid var(--border2); border-radius:8px; padding:10px; margin-bottom:15px; font-family:inherit;"></textarea>
+    <div class="sec-lbl">Link Foto / Kode (URL)</div>
+    <input id="pd-link" placeholder="Paste link foto GDrive atau Link GitHub di sini" style="width:100%; background:var(--bg3); color:var(--text); border:1px solid var(--border2); border-radius:8px; padding:10px; margin-bottom:15px;">
+    <div style="display:flex; gap:8px;">
+      <button class="btn-submit" onclick="saveProjDetail()">Simpan Detail</button>
+      <button class="btn-open" onclick="closeProjDetail()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="sync-modal" id="cat-manage-modal">
+  <div class="sync-content" style="max-width:400px;">
+    <h3 id="cm-title" style="color:var(--amber); margin-bottom:15px;">Manage Categories</h3>
+    <div id="cm-list" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; max-height:50vh; overflow-y:auto;">
+      </div>
+    <button class="btn-submit" style="width:100%; margin-bottom:10px;" onclick="addNewCat()">+ Add New Category</button>
+    <div style="text-align:right;">
+      <button class="btn-open" onclick="closeCatManage()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="sync-modal" id="edit-item-modal">
+  <div class="sync-content" style="max-width:400px;">
+    <h3 style="color:var(--amber); margin-bottom:15px;">Edit Item</h3>
+    <input id="ei-id" type="hidden">
+    <input id="ei-type" type="hidden">
+    <div class="form-row" style="margin-bottom:10px;">
+      <input id="ei-title" placeholder="Judul / Nama" style="width:100%">
+    </div>
+    <div class="form-row" style="margin-bottom:10px;">
+      <input id="ei-desc" placeholder="Deskripsi / Sumber" style="width:100%">
+    </div>
+    <div class="form-row" style="margin-bottom:15px;">
+      <select id="ei-cat" style="width:100%"></select>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-submit" onclick="saveItemEdit()">Simpan Perubahan</button>
+      <button class="btn-open" onclick="closeEditItemModal()">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="pomodoro-widget" id="pomodoro">
+  <div class="pomo-hdr">🍅 Fokus</div>
+  <div class="pomo-time" id="pomo-time">25:00</div>
+  <div class="pomo-ctrls">
+    <button class="icon-btn" id="pomo-btn-start" onclick="togglePomo()">▶</button>
+    <button class="icon-btn" onclick="resetPomo()">⏹</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// DATA STRUCTURES
+const LEVELS=[{lv:1,min:0,title:"Mahasiswa Baru"},{lv:2,min:200,title:"Curious Engineer"},{lv:3,min:500,title:"Signal Seeker"},{lv:4,min:900,title:"Instrumentation Builder"},{lv:5,min:1400,title:"Biomedical Engineer"},{lv:6,min:2000,title:"Clinical Technologist"},{lv:7,min:2600,title:"Biomedical Instrumentation Engineer"}];
+const FASES=[{id:"f1",e:"🔧",t:"Fase 1 — Repair & Solidify",s:"Sem 2–3"},{id:"f2",e:"📡",t:"Fase 2 — Biosignal Stack",s:"Sem 3–4"},{id:"f3",e:"🧬",t:"Fase 3 — Domain & Riset",s:"Sem 4–5"},{id:"f4",e:"🏥",t:"Fase 4 — Clinical Bridge",s:"Sem 5–7"}];
+const MQ=[{id:"mq01",f:"f1",n:"Essence of Calculus",xp:50,tag:null,d:"Tonton semua 11 episode 3Blue1Brown — minimal 1 per minggu, buat catatan visual."},{id:"mq02",f:"f1",n:"Filter Builder",xp:100,tag:null,d:"Rancang filter bandpass aktif di breadboard (LM741/TL071), ukur respons frekuensi dengan oscilloscope."},{id:"mq03",f:"f1",n:"Math Redemption I",xp:150,tag:"ms",d:"Lulus Kalkulus (ulang) dengan nilai minimal B."},{id:"mq04",f:"f1",n:"Math Redemption II",xp:150,tag:"ms",d:"Lulus Fisika Mekanika (ulang) dengan nilai minimal B."},{id:"mq05",f:"f1",n:"The Connection",xp:50,tag:null,d:"Buat catatan yang menghubungkan minimal 5 topik Kalkulus ke aplikasi nyata di biosignal."},{id:"mq06",f:"f2",n:"Amp Up",xp:100,tag:null,d:"Implementasikan INA333 instrumentation amplifier."},{id:"mq07",f:"f2",n:"Heartbeat",xp:200,tag:"ms",d:"Build ECG acquisition circuit: INA333 + filter + ESP32."},{id:"mq08",f:"f2",n:"Mind & Muscle",xp:100,tag:null,d:"Rekam sinyal EMG dari lengan dengan op-amp, proses di Python."},{id:"mq09",f:"f2",n:"Signal Vision",xp:100,tag:null,d:"Visualisasi sinyal real-time di Python."},{id:"mq10",f:"f2",n:"Python Profiler",xp:75,tag:null,d:"Kuasai NumPy & SciPy untuk signal processing."},{id:"mq11",f:"f3",n:"Wireless Heart",xp:200,tag:"ms",d:"Wearable ECG Monitor dengan BLE streaming."},{id:"mq12",f:"f3",n:"Mind Reader",xp:150,tag:null,d:"EEG-based attention monitor."},{id:"mq13",f:"f3",n:"Paper Trail",xp:100,tag:null,d:"Baca dan presentasikan 6 IEEE papers."},{id:"mq14",f:"f3",n:"Challenger",xp:150,tag:"ms",d:"Submit project ke PKM-KC atau kompetisi alat medis."},{id:"mq15",f:"f3",n:"Clean Signal",xp:100,tag:null,d:"Adaptive noise filtering."},{id:"mq16",f:"f4",n:"Hospital Recon",xp:200,tag:"ms",d:"Magang/observasi di IPSRS RS minimal 2 minggu."},{id:"mq17",f:"f4",n:"Cross-Discipline",xp:100,tag:null,d:"Kolaborasi project dengan mahasiswa FK."},{id:"mq18",f:"f4",n:"Final Boss",xp:300,tag:"boss",d:"Tugas Akhir berbasis produk."},{id:"mq19",f:"f4",n:"Conference Mode",xp:100,tag:null,d:"Hadiri konferensi/seminar biomedis."}];
+const SQ=[{id:"sq01",n:"Lens & Light",xp:50,init:true,d:"Jadi fotografer di TedxSBY ✓."},{id:"sq02",n:"Sky Intern",xp:75,init:true,d:"Internship di Bayucaraka UAV ✓."},{id:"sq03",n:"Join the Guild",xp:100,init:false,d:"Masuk tim riset/kompetisi ITS sebagai anggota aktif."},{id:"sq04",n:"Code Showcase",xp:75,init:false,d:"GitHub portofolio dengan minimal 2 project."},{id:"sq05",n:"Field Notes",xp:50,init:false,d:"Dokumentasikan project pertama."},{id:"sq06",n:"Network Node",xp:50,init:false,d:"Percakapan bermakna dengan clinical engineer."},{id:"sq07",n:"Art of Electronics",xp:50,init:false,d:"Baca The Art of Electronics Bab 1–3."},{id:"sq08",n:"New Guild",xp:50,init:false,d:"Bergabung dengan UKM baru di semester depan."},{id:"sq09",n:"Abstract Thinker",xp:75,init:false,d:"Submit abstract atau poster ke seminar mahasiswa."},{id:"sq10",n:"Board Designer",xp:75,init:false,d:"Pelajari KiCad: schematic & layout."},{id:"sq11",n:"Open Source",xp:75,init:false,d:"Fork atau contribute ke project biosignal open source."}];
+const ACH=[{id:"a01",ico:"🎯",n:"First Steps",d:"Selesaikan quest pertamamu.",c:s=>totDone(s)>=1},{id:"a02",ico:"📐",n:"Math Reborn",d:"Selesaikan kedua Math Redemption quest.",c:s=>s.mq03&&s.mq04},{id:"a03",ico:"💓",n:"Heartbeat Detected",d:"Build ECG acquisition circuit pertama.",c:s=>s.mq07},{id:"a04",ico:"📡",n:"Signal Complete",d:"Selesaikan semua quest Fase 2.",c:s=>["mq06","mq07","mq08","mq09","mq10"].every(q=>s[q])},{id:"a05",ico:"🏆",n:"Published!",d:"Submit project ke PKM atau kompetisi.",c:s=>s.mq14},{id:"a06",ico:"🏥",n:"Clinical Eye",d:"Selesaikan hospital internship.",c:s=>s.mq16},{id:"a07",ico:"🎓",n:"Full Journey",d:"Selesaikan semua main quest.",c:s=>MQ.every(q=>s[q.id])},{id:"a08",ico:"⚡",n:"Side Hustler",d:"Selesaikan 5 side quest.",c:s=>SQ.filter(q=>s[q.id]).length>=5},{id:"a09",ico:"👑",n:"Completionist",d:"Selesaikan semua quest — main dan side.",c:s=>[...MQ,...SQ].every(q=>s[q.id])},{id:"a10",ico:"📚",n:"Bookworm",d:"Tandai 5 resource sebagai selesai.",c:s=>Object.values(s.resStatus||{}).filter(v=>v==='done').length>=5},{id:"a12",ico:"🔥",n:"On a Streak",d:"Streak 3 minggu berturut-turut pada satu habit.",c:s=>Object.values(s.streaks||{}).some(v=>v>=3)}];
+const DEF_RES=[{id:"r01",title:"Essence of Calculus",src:"3Blue1Brown (YouTube)",cat:"Video",fase:"Fase 1"},{id:"r02",title:"The Art of Electronics",src:"Horowitz & Hill",cat:"Buku",fase:"Fase 1"},{id:"r03",title:"Khan Academy Physics",src:"Khan Academy",cat:"Video",fase:"Fase 1"},{id:"r04",title:"Medical Instrumentation: Application & Design",src:"Webster",cat:"Buku",fase:"Fase 2"},{id:"r06",title:"INA333 Datasheet",src:"Texas Instruments",cat:"Tool",fase:"Fase 2"}];
+const GP={A:4.0,AB:3.5,B:3.0,BC:2.5,C:2.0,D:1.0,E:0.0};
+const SEMS=[
+  {sem:1,label:"Semester 1",cs:[{id:"s1c1",n:"Biologi Kedokteran",sks:3},{id:"s1c2",n:"Anatomi",sks:3},{id:"s1c3",n:"Kimia",sks:2},{id:"s1c4",n:"Fisika Mekanika",sks:3,def:"D",note:"⚠ Diulang S3"},{id:"s1c5",n:"Pengantar Elektronika Medis",sks:3},{id:"s1c6",n:"Kalkulus 1",sks:2,def:"D",note:"⚠ Diulang S3"}]},
+  {sem:2,label:"Semester 2",cs:[{id:"s2c1",n:"Pengantar Teknologi Kedokteran",sks:3},{id:"s2c2",n:"Fisiologi Kedokteran",sks:3},{id:"s2c3",n:"Fisika Listrik dan Magnet",sks:3},{id:"s2c4",n:"Elektronika Digital",sks:3},{id:"s2c5",n:"Algoritma dan Pemrograman Komputer",sks:4},{id:"s1c7",n:"Statistika",sks:2},{id:"s1c8",n:"Pengantar Penulisan Karya Ilmiah",sks:3}]},
+  {sem:3,label:"Semester 3",cs:[{id:"s3c1",n:"Teknologi Pencitraan Medis",sks:3},{id:"s3c2",n:"Ear and Hearing",sks:2},{id:"s3c3",n:"Pengantar Biomekanik",sks:3},{id:"s3c4",n:"Desain Tek. Berbantuan Komputer Medis",sks:3},{id:"s3c5",n:"Pengantar Sistem Internet of Things",sks:3},{id:"s3c6",n:"Pengolahan Sinyal Biomedik",sks:4},{id:"s2c6",n:"Manajemen Data",sks:2},{id:"s3c7",n:"Kalkulus 1 (Ulang)",sks:2,retake:true},{id:"s3c8",n:"Fisika Mekanika (Ulang)",sks:3,retake:true}]},
+  {sem:4,label:"Semester 4",cs:[{id:"s4c1",n:"Teknologi Keperawatan",sks:3},{id:"s4c2",n:"Tek. Ilmu Kedokteran Medik",sks:3},{id:"s4c3",n:"Desain Tek. Difabel dan Alat Bantu",sks:3},{id:"s4c4",n:"Critical and Design Thinking",sks:2},{id:"s4c5",n:"Sistem Tertanam pada Tek. Kedokteran",sks:3},{id:"s4c6",n:"Ilmu Data Medis",sks:3},{id:"s4c7",n:"Pemrograman Perangkat Bergerak",sks:2}]},
+  {sem:5,label:"Semester 5",cs:[{id:"s5c1",n:"Interaksi Pasien dan Tek. Kedokteran",sks:3},{id:"s5c2",n:"Tek. Ilmu Kedokteran Bedah",sks:3},{id:"s5c3",n:"Purwarupa Cepat Alat Kesehatan",sks:3},{id:"s5c4",n:"Desain Teknologi Kesehatan",sks:3},{id:"s5c5",n:"Komunikasi Data Medis",sks:2},{id:"s5c6",n:"Pembelajaran Mesin untuk Data Medis",sks:3},{id:"s4c8",n:"Visualisasi Data Medis",sks:2}]},
+  {sem:6,label:"Semester 6",cs:[{id:"s6c1",n:"Magang",sks:4},{id:"s6c2",n:"MK Pilihan I",sks:3},{id:"s6c3",n:"MK Pilihan II",sks:3},{id:"s6c4",n:"MK Pilihan III",sks:3},{id:"s6c5",n:"Agama",sks:2},{id:"s5c7",n:"Kewarganegaraan",sks:2},{id:"s6c8",n:"Aplikasi Tek. & Transformasi Digital",sks:2},{id:"s7c7",n:"Metode Penelitian Tek. Kedokteran",sks:3}]},
+  {sem:7,label:"Semester 7",cs:[{id:"s7c1",n:"Tatalaksana Klinik & Rintisan Bisnis Digital",sks:3},{id:"s7c2",n:"Sim Rumah Sakit",sks:3},{id:"s7c3",n:"MK Pilihan IV",sks:3},{id:"s7c4",n:"MK Pilihan V",sks:3},{id:"s6c7",n:"Bahasa Indonesia",sks:2},{id:"s6c6",n:"Pancasila",sks:2},{id:"s7c6",n:"Kewirausahaan Berbasis Teknologi",sks:3},{id:"s7c5",n:"Bahasa Inggris",sks:2}]},
+  {sem:8,label:"Semester 8",cs:[{id:"s8c1",n:"Tugas Akhir",sks:6}]}
+];
+const WH=[{id:"wh1",n:"Baca materi elektronika",d:"Materi elektro/biosignal",tgt:3,u:"sesi"},{id:"wh2",n:"Praktek hardware / coding",d:"Praktek langsung di breadboard/IDE",tgt:2,u:"sesi"},{id:"wh3",n:"Review catatan kuliah",d:"Buka dan review catatan",tgt:5,u:"hari"}];
+const MH=[{id:"mh1",n:"Baca 1 IEEE Paper"},{id:"mh2",n:"Update portofolio / GitHub"},{id:"mh3",n:"Review kemajuan roadmap"}];
+const DEF_PROJ=[{id:"pj1",title:"Pomodoro Timer",desc:"Hardware timer menggunakan 7-segment.",cat:"Mikrokontroler",ico:"🍅"},{id:"pj2",title:"Digital Dice",desc:"Membuat dadu digital dengan LED.",cat:"Mikrokontroler",ico:"🎲"},{id:"pj3",title:"Counting 7-Segment",desc:"Rangkaian counter up/down dasar.",cat:"Analog",ico:"🔢"}];
+
+// CORE STATE MANAGEMENT
+function loadState(){
+  const raw=localStorage.getItem('bio_q_v2');
+  const s=raw?JSON.parse(raw):{};
+  if(!s.grades)s.grades={}; if(!s.resStatus)s.resStatus={}; if(!s.resRating)s.resRating={}; 
+  if(!s.customRes)s.customRes=[]; if(!s.streaks)s.streaks={};
+  if(!s.customProj)s.customProj=[]; if(!s.projStatus)s.projStatus={}; if(!s.projDetails)s.projDetails={};
+  if(!s.hiddenItems) s.hiddenItems=[]; // Daftar item yang dihapus
+  if(!s.weeklyHabits) s.weeklyHabits = [...WH];
+  if(!s.monthlyHabits) s.monthlyHabits = [...MH];
+  SQ.filter(q=>q.init).forEach(q=>{if(s[q.id]===undefined)s[q.id]=true;});
+  SEMS.forEach(sem=>sem.cs.forEach(c=>{if(s.grades[c.id]===undefined&&c.def)s.grades[c.id]=c.def;}));
+  const cw=getWK();if(!s.wh||s.wh.wk!==cw)s.wh={wk:cw,cnt:{}};
+  const cm=getMK();if(!s.mh||s.mh.mk!==cm)s.mh={mk:cm,done:{}};
+  return s;
+}
+function sv(){localStorage.setItem('bio_q_v2',JSON.stringify(state));}
+let state=loadState();
+
+// UTILS
+function getWK(){const d=new Date();const j=new Date(d.getFullYear(),0,1);const w=Math.ceil((((d-j)/86400000)+j.getDay()+1)/7);return `${d.getFullYear()}-W${String(w).padStart(2,'0')}`;}
+function getMK(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
+function calcXP(){let x=0;MQ.forEach(q=>{if(state[q.id])x+=q.xp;});SQ.forEach(q=>{if(state[q.id])x+=q.xp;});return x;}
+function getLevel(xp){return LEVELS.slice().reverse().find(l=>xp>=l.min)||LEVELS[0];}
+function totDone(s){return[...MQ,...SQ].filter(q=>s[q.id]).length;}
+function ipsColor(v){if(v===null)return '';if(v>=3.5)return 'good';if(v>=2.75)return 'mid';return 'bad';}
+
+// RENDERING FUNCTIONS
+function updateHeader(xp,prevXP){
+  const lvl=getLevel(xp);const next=LEVELS.find(l=>l.min>xp);
+  document.getElementById('lv-num').textContent=lvl.lv;
+  document.getElementById('player-title').textContent=lvl.title;
+  const bmax=next?next.min-lvl.min:1;const bval=next?xp-lvl.min:bmax;
+  document.getElementById('xp-bar').style.width=Math.min(100,(bval/bmax)*100)+'%';
+  document.getElementById('xp-lbl').textContent=next?`${xp} / ${next.min} XP`:`${xp} XP — MAX`;
+  if(prevXP!==undefined&&getLevel(prevXP).lv<lvl.lv)showLvUp(lvl.title);
+}
+
+function makeQ(q){
+  const done=!!state[q.id];const el=document.createElement('div');el.className='q'+(done?' done':'');el.id='q-'+q.id;
+  const tagMap={ms:'<span class="q-tag t-ms">★ milestone</span>',boss:'<span class="q-tag t-boss">⚔ final boss</span>'};
+  const tagHTML=done?'<span class="q-tag t-done">selesai ✓</span>':(tagMap[q.tag]||'');
+  el.innerHTML=`<div class="q-chk"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5l3 3L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="q-body"><div class="q-name">${q.n}</div><div class="q-desc">${q.d}</div></div><div class="q-r"><span class="q-xp">+${q.xp} XP</span>${tagHTML}</div>`;
+  el.onclick=()=>toggleQ(q.id);return el;
+}
+
+function renderMain(){
+  const c=document.getElementById('main-cont');c.innerHTML='';
+  FASES.forEach(f=>{
+    const qs=MQ.filter(q=>q.f===f.id);const done=qs.filter(q=>state[q.id]).length;
+    const g=document.createElement('div');g.className='fase-g';
+    g.innerHTML=`<div class="fase-hdr"><span>${f.e}</span><span class="fase-ttl">${f.t}</span><span class="fase-sem">${f.s}</span><span class="fase-prg">${done}/${qs.length}</span></div><div class="q-list" id="ql-${f.id}"></div>`;
+    c.appendChild(g);const list=g.querySelector(`#ql-${f.id}`);qs.forEach(q=>list.appendChild(makeQ(q)));
+  });
+}
+
+function renderSide(){const c=document.getElementById('side-cont');c.innerHTML='';SQ.forEach(q=>c.appendChild(makeQ(q)));}
+
+function renderAch(){
+  const c=document.getElementById('ach-cont');c.innerHTML='';let ul=0;
+  ACH.forEach(a=>{const u=a.c(state);if(u)ul++;const d=document.createElement('div');d.className='ach'+(u?' ul':'');
+  d.innerHTML=`<div class="ach-ico">${u?a.ico:'🔒'}</div><div class="ach-name">${a.n}</div><div class="ach-desc">${a.d}</div><div class="ach-st">${u?'✓ unlocked':'locked'}</div>`;c.appendChild(d);});return ul;
+}
+
+// RESOURCE LOG LOGIC
+let resFilter='All';
+function renderRes(){
+  const all=[...DEF_RES,...(state.customRes||[])].filter(i => !state.hiddenItems.includes(i.id));
+  const cats=['All', ...(state.resCats || ['Buku','Paper','Video','Tool','Kursus'])];
+  
+  document.getElementById('res-filters').innerHTML=cats.map(c=>`<button class="rf${resFilter===c?' active':''}" onclick="setRF('${c}')">${c} <span style="opacity:.6">${c==='All'?all.length:all.filter(r=>r.cat===c).length}</span></button>`).join('') + `<button class="rf" onclick="openCatManage('res')" style="color:var(--amber); border-color:var(--amber-b);">⚙️ Manage</button>`;
+  
+  const sel = document.getElementById('ri-cat');
+  if(sel) sel.innerHTML = (state.resCats || ['Buku','Paper','Video','Tool','Kursus']).map(c => `<option value="${c}">${c}</option>`).join('');
+
+  const filt=resFilter==='All'?all:all.filter(r=>r.cat===resFilter);
+  const c=document.getElementById('res-list');c.innerHTML='';
+  filt.forEach(r=>{
+    const st=state.resStatus[r.id]||'belum';const rt=state.resRating[r.id]||0;
+    const cc='cat-'+r.cat.toLowerCase();
+    const starsH=st==='done'?`<div class="stars">${[1,2,3,4,5].map(i=>`<span class="star${i<=rt?' lit':''}" onclick="rateR('${r.id}',${i},event)">★</span>`).join('')}</div>`:'';
+    const stLbl=st==='belum'?'Belum mulai':st==='reading'?'Sedang dibaca':'Selesai ✓';
+    const d=document.createElement('div');d.className='res-card';
+    d.innerHTML=`
+      <button class="btn-item-edit" onclick="openEditItem('res', '${r.id}', event)" title="Edit">✎</button>
+      <button class="btn-item-del" onclick="deleteItem('${r.id}', event)" title="Delete">×</button>
+      <span class="res-cat ${cc}">${r.cat}</span><div class="res-body"><div class="res-title">${r.title}</div><div class="res-src">${r.src||''}</div><div class="res-meta"><button class="res-status ${st}" onclick="cycleR('${r.id}')">${stLbl}</button>${starsH}<span class="res-fase">${r.fase}</span></div></div>`;
+    c.appendChild(d);
+  });
+}
+function setRF(f){resFilter=f;renderRes();}
+function cycleR(id){const cur=state.resStatus[id]||'belum';state.resStatus[id]=cur==='belum'?'reading':cur==='reading'?'done':'belum';sv();renderRes();renderAch();updateCounts();}
+function rateR(id,r,e){e.stopPropagation();state.resRating[id]=r;sv();renderRes();}
+function toggleAddForm(){document.getElementById('add-form').classList.toggle('open');}
+function addResource(){
+  const title=document.getElementById('ri-title').value.trim();if(!title)return;
+  state.customRes.push({id:'cr-'+Date.now(),title,src:document.getElementById('ri-src').value.trim(),cat:document.getElementById('ri-cat').value,fase:document.getElementById('ri-fase').value});
+  sv();renderRes();toggleAddForm();
+}
+
+// PROJECTS LOGIC
+let projFilter='All';
+function renderProj(){
+  const all=[...DEF_PROJ,...(state.customProj||[])].filter(i => !state.hiddenItems.includes(i.id));
+  const cats=['All', ...(state.projCats || ['Mikrokontroler','Analog','PCB Design','Mekatronik'])];
+  
+  document.getElementById('proj-filters').innerHTML=cats.map(c=>`<button class="rf${projFilter===c?' active':''}" onclick="setPF('${c}')">${c} <span style="opacity:.6">${c==='All'?all.length:all.filter(p=>p.cat===c).length}</span></button>`).join('') + `<button class="rf" onclick="openCatManage('proj')" style="color:var(--amber); border-color:var(--amber-b);">⚙️ Manage</button>`;
+  
+  const selP = document.getElementById('pi-cat');
+  if(selP) selP.innerHTML = (state.projCats || ['Mikrokontroler','Analog','PCB Design','Mekanik/UAV']).map(c => `<option value="${c}">${c}</option>`).join('');
+
+  const filt=projFilter==='All'?all:all.filter(p=>p.cat===projFilter);
+  const c=document.getElementById('proj-list');c.innerHTML='';
+  filt.forEach(p=>{
+    const st=state.projStatus[p.id]||'Ideation';
+    const isDone=st==='Done ✓';
+    const d=document.createElement('div');d.className='ach'+(isDone?' ul':'');
+    d.innerHTML=`
+      <button class="btn-item-edit" onclick="openEditItem('proj', '${p.id}', event)" title="Edit">✎</button>
+      <button class="btn-item-del" onclick="deleteItem('${p.id}', event)" title="Delete">×</button>
+      <div class="ach-ico" onclick="openProjDetail('${p.id}')" style="cursor:pointer">${p.ico||'⚙️'}</div><div class="ach-name" onclick="openProjDetail('${p.id}')" style="cursor:pointer; ${isDone?'':'color:var(--text2)'}">${p.title}</div><div class="ach-desc">${p.desc}</div><div class="ach-st" style="cursor:pointer; display:inline-block; margin-top:8px; padding:3px 8px; border:1px solid var(--border2); border-radius:6px; background:var(--bg3);" onclick="cycleProj('${p.id}')">${st}</div><span style="font-size:9px; color:var(--text3); float:right; margin-top:10px; font-family:'IBM Plex Mono',monospace;">${p.cat}</span>`;
+    c.appendChild(d);
+  });
+}
+function setPF(f){projFilter=f;renderProj();}
+function cycleProj(id){
+  const order=['Ideation','Designing','Building','Testing','Done ✓'];
+  const cur=state.projStatus[id]||'Ideation';
+  state.projStatus[id]=order[(order.indexOf(cur)+1)%order.length];
+  sv();renderProj();updateCounts();
+}
+function toggleProjForm(){document.getElementById('proj-form').classList.toggle('open');}
+function addProject(){
+  const title=document.getElementById('pi-title').value.trim();if(!title)return;
+  state.customProj.push({id:'cp-'+Date.now(),title,desc:document.getElementById('pi-desc').value.trim(),cat:document.getElementById('pi-cat').value,ico:document.getElementById('pi-ico').value.trim()||'⚙️'});
+  sv();renderProj();toggleProjForm();
+}
+
+// PROJECT DETAIL LOGIC
+let currentEditingProj=null;
+function openProjDetail(id){
+  const p = [...DEF_PROJ,...(state.customProj||[])].find(x=>x.id===id);
+  if(!p) return;
+  currentEditingProj=id;
+  document.getElementById('pd-title').textContent = (p.ico||'⚙️') + " " + p.title;
+  document.getElementById('pd-cat').textContent = "Kategori: " + p.cat;
+  const s = state.projDetails[id]||{notes:'',link:''};
+  document.getElementById('pd-notes').value = s.notes;
+  document.getElementById('pd-link').value = s.link;
+  document.getElementById('proj-detail-modal').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+function saveProjDetail(){
+  if(!currentEditingProj) return;
+  state.projDetails[currentEditingProj] = {notes: document.getElementById('pd-notes').value, link: document.getElementById('pd-link').value};
+  sv(); closeProjDetail(); showXPP("Detail project disimpan!");
+}
+function closeProjDetail(){
+  document.getElementById('proj-detail-modal').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+let currentManageType = 'res';
+
+function openCatManage(type) {
+  currentManageType = type;
+  document.getElementById('cm-title').textContent = type === 'res' ? 'Manage Resource Types' : 'Manage Project Categories';
+  
+  // FIX: Safety Check. Paksa isi default masuk ke memori jika daftar kategori ternyata kosong/hilang
+  if (!state.resCats || state.resCats.length === 0) state.resCats = ['Buku','Paper','Video','Tool','Kursus'];
+  if (!state.projCats || state.projCats.length === 0) state.projCats = ['Mikrokontroler','Analog','PCB Design','Mekanik/UAV'];
+  
+  renderCatList();
+  document.getElementById('cat-manage-modal').classList.add('show');
+}
+
+function closeCatManage() {
+  document.getElementById('cat-manage-modal').classList.remove('show');
+}
+
+function renderCatList() {
+  const listDiv = document.getElementById('cm-list');
+  const cats = currentManageType === 'res' ? state.resCats : state.projCats;
+  
+  listDiv.innerHTML = cats.map(c => `
+    <div class="cm-item">
+      <span class="cm-item-name">${c}</span>
+      <div class="cm-actions">
+        <button class="cm-btn" onclick="editCatAction('${c}')">Edit</button>
+        <button class="cm-btn del" onclick="deleteCatAction('${c}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addNewCat() {
+  const n = prompt("Masukkan nama kategori baru:");
+  if (!n || !n.trim()) return;
+  const name = n.trim();
+  const cats = currentManageType === 'res' ? state.resCats : state.projCats;
+  
+  if (cats.includes(name)) return alert("Kategori sudah ada!");
+  cats.push(name); // Tambahkan ke daftar yang aman
+  sv(); renderCatList(); renderRes(); renderProj();
+}
+
+function editCatAction(oldName) {
+  const newName = prompt("Ubah nama kategori:", oldName);
+  if (!newName || !newName.trim() || newName.trim() === oldName) return;
+  const name = newName.trim();
+  const cats = currentManageType === 'res' ? state.resCats : state.projCats;
+  
+  if (cats.includes(name)) return alert("Nama kategori sudah terpakai!");
+  
+  const idx = cats.indexOf(oldName);
+  if (idx !== -1) cats[idx] = name;
+
+  // FIX: Pastikan item yang sudah terlanjur pakai kategori lama, ikut berubah jadi kategori baru
+  if (currentManageType === 'res') {
+    (state.customRes || []).forEach(r => { if(r.cat === oldName) r.cat = name; });
+    if(resFilter === oldName) resFilter = name;
+  } else {
+    (state.customProj || []).forEach(p => { if(p.cat === oldName) p.cat = name; });
+    if(projFilter === oldName) projFilter = name;
+  }
+  sv(); renderCatList(); renderRes(); renderProj();
+}
+
+function deleteCatAction(cat) {
+  if (!confirm(`Yakin ingin menghapus kategori "${cat}"?`)) return;
+  if (currentManageType === 'res') {
+    state.resCats = state.resCats.filter(c => c !== cat);
+    if(resFilter === cat) resFilter = 'All';
+  } else {
+    state.projCats = state.projCats.filter(c => c !== cat);
+    if(projFilter === cat) projFilter = 'All';
+  }
+  sv(); renderCatList(); renderRes(); renderProj();
+}
+// COURSES LOGIC
+function calcIPS(cs){let p=0,s=0;cs.forEach(c=>{const g=state.grades[c.id];if(g&&GP[g]!==undefined){p+=GP[g]*c.sks;s+=c.sks;}});return s>0?(p/s):null;}
+function renderCourses(){
+  let allP=0,allS=0;
+  SEMS.forEach(sem=>sem.cs.forEach(c=>{const g=state.grades[c.id];if(g&&GP[g]!==undefined){allP+=GP[g]*c.sks;allS+=c.sks;}}));
+  const ipk=allS>0?(allP/allS).toFixed(2):'-';const ipc=allS>0?ipsColor(allP/allS):'';
+  document.getElementById('ipk-bar').innerHTML=`<div><div class="ipk-big ${ipc}">${ipk}</div><div class="ipk-lbl">IPK Kumulatif</div></div><div class="ipk-info">Total SKS: ${allS}</div>`;
+  const c=document.getElementById('courses-cont');c.innerHTML='';
+  SEMS.forEach((sem,idx)=>{
+    const ips=calcIPS(sem.cs);const ipsStr=ips!==null?ips.toFixed(2):'-';
+    const block=document.createElement('div');block.className='sem-block'+(idx===0?' open':'');
+    const rows=sem.cs.map(c=>{
+      const g=state.grades[c.id]||'';const gc=g?'g-'+g.toLowerCase().replace('.',''):'';
+      return `<div class="c-row"><span class="c-name${c.retake?' retake':''}">${c.n}</span><span class="c-sks">${c.sks} sks</span><select class="g-sel ${gc}" onchange="setGrade('${c.id}',this.value,this)"><option value="">—</option>${Object.keys(GP).map(gr=>`<option value="${gr}"${g===gr?' selected':''}>${gr}</option>`).join('')}</select></div>`;
+    }).join('');
+    block.innerHTML=`<div class="sem-hdr" onclick="this.parentElement.classList.toggle('open')"><div class="sem-l"><span class="sem-name">${sem.label}</span><span class="sem-ips-val ${ipsColor(ips)}">IPS: ${ipsStr}</span></div><span class="sem-arr">▼</span></div><div class="sem-body">${rows}</div>`;
+    c.appendChild(block);
+  });
+}
+function setGrade(id,val,sel){state.grades[id]=val;sv();renderCourses();updateCounts();}
+
+// HABITS & STATS
+function renderHabits(){
+  const hg=document.getElementById('habit-grid');hg.innerHTML='';
+  state.weeklyHabits.forEach(h=>{
+    const c=state.wh.cnt[h.id]||0;const pct=Math.min(100,Math.round((c/h.tgt)*100));
+    const el=document.createElement('div');el.className='h-card'+(c>=h.tgt?' done':'');
+    el.style.position = 'relative'; // Agar tombol silang nempel di pojok
+    el.innerHTML=`
+      <button class="btn-item-del" onclick="deleteHabit('weekly', '${h.id}', event)">×</button>
+      <div class="h-top">
+        <span class="h-name" onclick="editHabit('weekly', '${h.id}', event)" style="cursor:pointer; border-bottom:1px dotted var(--text3); padding-right:15px;" title="Klik untuk edit">${h.n}</span>
+        <span class="h-streak" style="margin-right:8px;">🔥 ${state.streaks[h.id]||0}w</span>
+      </div>
+      <div class="h-pb-bg"><div class="h-pb-fill" style="width:${pct}%"></div></div>
+      <div class="h-prog">
+        <span>${c}/${h.tgt}</span>
+        <div class="h-btns">
+          <button class="h-btn" onclick="subH('${h.id}')" style="padding:4px 8px;">-</button>
+          <button class="h-btn plus" onclick="addH('${h.id}')">+</button>
+        </div>
+      </div>
+    `;
+    hg.appendChild(el);
+  });
+
+  const mg=document.getElementById('monthly-grid');mg.innerHTML='';
+  state.monthlyHabits.forEach(h=>{
+    const done=state.mh.done[h.id];
+    const el=document.createElement('div');el.className='m-card'+(done?' done':'');
+    el.style.position = 'relative';
+    el.innerHTML=`
+      <button class="btn-item-del" style="top:50%; transform:translateY(-50%); right:8px;" onclick="deleteHabit('monthly', '${h.id}', event)">×</button>
+      <div class="m-chk"></div>
+      <span class="m-name" onclick="editHabit('monthly', '${h.id}', event)" style="cursor:pointer; border-bottom:1px dotted var(--text3); padding-right:20px;" title="Klik untuk edit">${h.n}</span>
+    `;
+    el.onclick=(e)=>{
+      // Jangan centang habit jika yang diklik adalah tombol silang atau judul (edit)
+      if(e.target.tagName === 'BUTTON' || e.target.tagName === 'SPAN') return;
+      state.mh.done[h.id]=!done; sv(); renderHabits(); updateCounts();
+    };
+    mg.appendChild(el);
+  });
+}
+
+function addH(id){
+  const h = state.weeklyHabits.find(h=>h.id===id);
+  if(!h) return;
+  const prev=state.wh.cnt[id]||0;state.wh.cnt[id]=prev+1;
+  if(state.wh.cnt[id]>=h.tgt&&prev<h.tgt) state.streaks[id]=(state.streaks[id]||0)+1;
+  sv();renderHabits();updateCounts();
+}
+
+function subH(id){
+  const h = state.weeklyHabits.find(h=>h.id===id);
+  if(!h) return;
+  
+  const prev = state.wh.cnt[id] || 0;
+  if(prev > 0) {
+    state.wh.cnt[id] = prev - 1;
+    
+    // Jika sebelumnya sudah mencapai target (selesai) tapi sekarang dikurangi jadi di bawah target, batalkan streak-nya
+    if(prev >= h.tgt && state.wh.cnt[id] < h.tgt) {
+      state.streaks[id] = Math.max(0, (state.streaks[id] || 0) - 1);
+    }
+    
+    sv(); renderHabits(); updateCounts();
+  }
+}
+// SYNC & MISC
+function toggleSyncMenu(){document.getElementById('sync-modal').classList.toggle('show');document.getElementById('overlay').classList.toggle('show');}
+function exportData(){document.getElementById('sync-data').value=localStorage.getItem('bio_q_v2');document.getElementById('sync-msg').textContent="Data siap di-copy!";}
+function importData(){try{const inp=document.getElementById('sync-data').value.trim();JSON.parse(inp);localStorage.setItem('bio_q_v2',inp);location.reload();}catch(e){alert("Data tidak valid!");}}
+function closeAllModals(){document.querySelectorAll('.sync-modal, .lvup').forEach(m=>m.classList.remove('show'));document.getElementById('overlay').classList.remove('show');}
+
+function toggleQ(id){
+  const prev=calcXP();state[id]=!state[id];sv();
+  updateHeader(calcXP(),prev);renderMain();renderSide();renderAch();renderMainStats();updateCounts();
+}
+function renderMainStats(){
+  const dM=MQ.filter(q=>state[q.id]).length;const dS=SQ.filter(q=>state[q.id]).length;
+  const pct=Math.round(((dM+dS)/(MQ.length+SQ.length))*100);
+  document.getElementById('main-stats').innerHTML=`<div class="stat-c"><div class="sl">Total XP</div><div class="sv">${calcXP()}<span>xp</span></div></div><div class="stat-c"><div class="sl">Main Quests</div><div class="sv">${dM}/${MQ.length}</div></div><div class="stat-c"><div class="sl">Side Quests</div><div class="sv">${dS}/${SQ.length}</div></div><div class="stat-c"><div class="sl">Progress</div><div class="sv">${pct}%</div></div>`;
+}
+
+// TABS SYSTEM
+const TABS=[
+  {id:'main',lbl:'Main Quests',p:'p-main',cnt:'c-main'},
+  {id:'side',lbl:'Side Quests',p:'p-side',cnt:'c-side'},
+  {id:'ach',lbl:'Achievements',p:'p-ach',cnt:'c-ach'},
+  {id:'res',lbl:'Resources',p:'p-res',cnt:'c-res'},
+  {id:'courses',lbl:'Courses',p:'p-courses',cnt:'c-courses'},
+  {id:'proj',lbl:'Projects',p:'p-proj',cnt:'c-proj'},
+  {id:'stats',lbl:'Stats & Habits',p:'p-stats',cnt:'c-stats'}
+];
+
+function buildTabs(){
+  const nav=document.getElementById('tab-nav');
+  TABS.forEach(t=>{const b=document.createElement('button');b.className='tb'+(t.id==='main'?' active':'');b.id='tb-'+t.id;b.innerHTML=t.lbl+`<span class="tc" id="${t.cnt}">0</span>`;b.onclick=()=>switchTab(t.id);nav.appendChild(b);});
+}
+function switchTab(id){
+  document.querySelectorAll('.panel, .tb').forEach(el=>el.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  document.getElementById('tb-'+id).classList.add('active');
+  activeTab=id; if(id==='stats')setTimeout(renderCharts,100);
+}
+
+function updateCounts(){
+  const dM=MQ.filter(q=>state[q.id]).length;
+  const dS=SQ.filter(q=>state[q.id]).length;
+  const dA=ACH.filter(a=>a.c(state)).length;
+  
+  const allR=[...DEF_RES,...(state.customRes||[])].filter(i => !state.hiddenItems.includes(i.id));
+  const dR=allR.filter(r=>state.resStatus[r.id]==='done').length;
+  
+  const allP=[...DEF_PROJ,...(state.customProj||[])].filter(i => !state.hiddenItems.includes(i.id));
+  const dP=allP.filter(p=>state.projStatus[p.id]==='Done ✓').length;
+  
+  const fC=SEMS.reduce((a,s)=>a+s.cs.filter(c=>state.grades[c.id]).length,0);
+  const tC=SEMS.reduce((a,s)=>a+s.cs.length,0);
+  
+  // FIX Hitungan Habit Dinamis
+  const cnt = state.wh.cnt || {};
+  const dW = (state.weeklyHabits || WH).filter(h => (cnt[h.id]||0) >= h.tgt).length;
+  const dMH = (state.monthlyHabits || MH).filter(h => state.mh.done && state.mh.done[h.id]).length;
+  const totW = (state.weeklyHabits || WH).length;
+  const totM = (state.monthlyHabits || MH).length;
+
+  document.getElementById('c-main').textContent=`${dM}/${MQ.length}`;
+  document.getElementById('c-side').textContent=`${dS}/${SQ.length}`;
+  document.getElementById('c-ach').textContent=`${dA}/${ACH.length}`;
+  document.getElementById('c-res').textContent=`${dR}/${allR.length}`;
+  document.getElementById('c-courses').textContent=`${fC}/${tC}`;
+  document.getElementById('c-stats').textContent=`${dW+dMH}/${totW+totM}`;
+  if(document.getElementById('c-proj')) document.getElementById('c-proj').textContent = `${dP}/${allP.length}`;
+}
+
+// POMODORO LOGIC
+let pomoInterval, pomoTime=25*60, isPomoRunning=false;
+function updatePomoDisplay(){
+  const m=Math.floor(pomoTime/60).toString().padStart(2,'0');
+  const s=(pomoTime%60).toString().padStart(2,'0');
+  document.getElementById('pomo-time').textContent=`${m}:${s}`;
+}
+function togglePomo(){
+  const btn=document.getElementById('pomo-btn-start');
+  if(isPomoRunning){clearInterval(pomoInterval); isPomoRunning=false; btn.textContent='▶';}
+  else {
+    isPomoRunning=true; btn.textContent='⏸';
+    pomoInterval=setInterval(()=>{
+      if(pomoTime>0){pomoTime--; updatePomoDisplay();}
+      else{clearInterval(pomoInterval); isPomoRunning=false; btn.textContent='▶'; alert('Waktu fokus selesai!');}
+    },1000);
+  }
+}
+function resetPomo(){clearInterval(pomoInterval); isPomoRunning=false; pomoTime=25*60; document.getElementById('pomo-btn-start').textContent='▶'; updatePomoDisplay();}
+
+// --- CHARTS IMPLEMENTATION ---
+let chartInstances = {};
+
+function renderCharts(){
+  if(typeof Chart === 'undefined') return;
+
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const tc = dark ? '#8c8880' : '#5a5750'; // Text color
+  const gc = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'; // Grid color
+
+  function mk(id, cfg){
+    if(chartInstances[id]) chartInstances[id].destroy();
+    const ctx = document.getElementById(id);
+    if(ctx) chartInstances[id] = new Chart(ctx, cfg);
+  }
+
+  // 1. Chart Quest Completion (Doughnut)
+  const dM=MQ.filter(q=>state[q.id]).length; 
+  const dS=SQ.filter(q=>state[q.id]).length;
+  mk('ch-quests', {
+    type: 'doughnut',
+    data: {
+      labels: ['Main ✓', 'Main ✗', 'Side ✓', 'Side ✗'],
+      datasets: [{
+        data: [dM, MQ.length-dM, dS, SQ.length-dS],
+        backgroundColor: ['#1a9e75', 'rgba(26,158,117,0.2)', '#3a82c8', 'rgba(58,130,200,0.2)'],
+        borderWidth: 0
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: tc, font: {size: 10}, boxWidth: 8 } } } }
+  });
+
+  // 2. Chart XP per Fase (Bar)
+  const fxp = FASES.map(f => {
+    const fQs = MQ.filter(q => q.f === f.id);
+    const earned = fQs.filter(q => state[q.id]).reduce((a,q) => a+q.xp, 0);
+    const total = fQs.reduce((a,q) => a+q.xp, 0);
+    return { lbl: f.id.toUpperCase(), earned, total };
+  });
+  mk('ch-xp', {
+    type: 'bar',
+    data: {
+      labels: fxp.map(f => f.lbl),
+      datasets: [
+        { label: 'Earned', data: fxp.map(f => f.earned), backgroundColor: '#e8a020', borderRadius: 4, borderWidth: 0 },
+        { label: 'Total', data: fxp.map(f => f.total), backgroundColor: 'rgba(232,160,32,0.2)', borderRadius: 4, borderWidth: 0 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: tc, font: {size: 10} }, grid: { display: false } }, y: { ticks: { color: tc, font: {size: 10} }, grid: { color: gc } } }
+    }
+  });
+
+  // 3. Chart IP per Semester (Line)
+  const ipsD = SEMS.map(s => {
+    const v = calcIPS(s.cs); return v !== null ? parseFloat(v.toFixed(2)) : null;
+  });
+  mk('ch-ip', {
+    type: 'line',
+    data: {
+      labels: SEMS.map((s,i) => 'S'+(i+1)),
+      datasets: [{ label: 'IPS', data: ipsD, borderColor: '#3a82c8', backgroundColor: 'rgba(58,130,200,0.15)', tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: '#3a82c8' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: tc, font: {size: 10} }, grid: { display: false } }, y: { min: 0, max: 4, ticks: { color: tc, font: {size: 10}, stepSize: 1 }, grid: { color: gc } } }
+    }
+  });
+
+  // 4. Chart Status Resource (Bar Horizontal)
+  const allR = [...DEF_RES, ...(state.customRes||[])].filter(i => !(state.hiddenItems||[]).includes(i.id));
+  const bl = allR.filter(r => (state.resStatus[r.id]||'belum')==='belum').length;
+  const rd = allR.filter(r => state.resStatus[r.id]==='reading').length;
+  const dn = allR.filter(r => state.resStatus[r.id]==='done').length;
+  mk('ch-res', {
+    type: 'bar',
+    data: {
+      labels: ['Belum', 'Sedang', 'Selesai'],
+      datasets: [{ data: [bl, rd, dn], backgroundColor: ['rgba(140,136,128,0.5)', '#e8a020', '#1a9e75'], borderRadius: 4, borderWidth: 0 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: tc, font: {size: 10} }, grid: { color: gc } }, y: { ticks: { color: tc, font: {size: 10} }, grid: { display: false } } }
+    }
+  });
+}
+
+function showXPP(t){const el=document.getElementById('xp-popup');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
+function showLvUp(t){document.getElementById('lvup-t').textContent=t;document.getElementById('lvup').classList.add('show');document.getElementById('overlay').classList.add('show');}
+function closeLvUp(){document.getElementById('lvup').classList.remove('show');document.getElementById('overlay').classList.remove('show');}
+function toggleTheme(){
+  const d=document.documentElement; const isDark=d.dataset.theme==='dark';
+  d.dataset.theme=isDark?'light':'dark'; document.getElementById('theme-btn').textContent=isDark?'🌙':'☀';
+  localStorage.setItem('bio_theme', d.dataset.theme);
+}
+
+function init(){
+  const t=localStorage.getItem('bio_theme')||'dark'; document.documentElement.dataset.theme=t;
+  document.getElementById('theme-btn').textContent=t==='dark'?'☀':'🌙';
+  buildTabs(); updateHeader(calcXP()); renderMainStats(); renderMain(); renderSide(); renderAch(); renderRes(); renderProj(); renderCourses(); renderHabits(); updateCounts();
+}
+
+// --- FITUR DRAGGABLE POMODORO ---
+const pomoWidget = document.getElementById('pomodoro');
+const pomoHdr = document.querySelector('.pomo-hdr');
+pomoHdr.style.cursor = 'grab'; // Mengubah kursor jadi gambar tangan
+pomoHdr.title = "Tahan dan geser untuk memindahkan";
+
+let isDragging = false, startX, startY, initialX, initialY;
+
+pomoHdr.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  startX = e.clientX; 
+  startY = e.clientY;
+  const rect = pomoWidget.getBoundingClientRect();
+  initialX = rect.left; 
+  initialY = rect.top;
+  
+  // Matikan aturan CSS bawah/kiri bawaan agar bisa digeser bebas
+  pomoWidget.style.bottom = 'auto'; 
+  pomoWidget.style.right = 'auto';
+  pomoHdr.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  pomoWidget.style.left = `${initialX + dx}px`;
+  pomoWidget.style.top = `${initialY + dy}px`;
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+  pomoHdr.style.cursor = 'grab';
+});
+
+// --- SISTEM MANAJEMEN HABITS DINAMIS ---
+function addNewHabit(type) {
+  const title = prompt(`Masukkan judul ${type === 'weekly' ? 'Weekly' : 'Monthly'} Habit baru:`);
+  if (!title || !title.trim()) return;
+
+  if (type === 'weekly') {
+    let target = prompt("Masukkan target frekuensi per minggu (angka, misal: 3):", "3");
+    target = parseInt(target);
+    if (isNaN(target) || target < 1) target = 1;
+    state.weeklyHabits.push({ id: 'wh-' + Date.now(), n: title.trim(), tgt: target });
+  } else {
+    state.monthlyHabits.push({ id: 'mh-' + Date.now(), n: title.trim() });
+  }
+  sv(); renderHabits(); updateCounts();
+}
+
+function editHabit(type, id, e) {
+  if (e) e.stopPropagation();
+  const list = type === 'weekly' ? state.weeklyHabits : state.monthlyHabits;
+  const habit = list.find(h => h.id === id);
+  if (!habit) return;
+
+  const newTitle = prompt("Ubah judul habit:", habit.n);
+  if (newTitle && newTitle.trim()) habit.n = newTitle.trim();
+
+  if (type === 'weekly') {
+    let newTarget = prompt("Ubah target frekuensi per minggu:", habit.tgt);
+    if (newTarget) {
+      newTarget = parseInt(newTarget);
+      if (!isNaN(newTarget) && newTarget > 0) habit.tgt = newTarget;
+    }
+  }
+  sv(); renderHabits(); updateCounts();
+}
+
+function deleteHabit(type, id, e) {
+  if (e) e.stopPropagation();
+  if (!confirm("Hapus habit ini secara permanen?")) return;
+
+  if (type === 'weekly') {
+    state.weeklyHabits = state.weeklyHabits.filter(h => h.id !== id);
+  } else {
+    state.monthlyHabits = state.monthlyHabits.filter(h => h.id !== id);
+  }
+  sv(); renderHabits(); updateCounts();
+}
+
+// --- SISTEM EDIT ITEM (RESOURCE & PROJECT) ---
+function openEditItem(type, id, e) {
+  e.stopPropagation();
+  const isRes = type === 'res';
+  const defaultList = isRes ? DEF_RES : DEF_PROJ;
+  const customList = isRes ? (state.customRes || []) : (state.customProj || []);
+  
+  // Cari item-nya
+  let item = customList.find(i => i.id === id) || defaultList.find(i => i.id === id);
+  if (!item) return;
+
+  // Isi data ke form
+  document.getElementById('ei-id').value = id;
+  document.getElementById('ei-type').value = type;
+  document.getElementById('ei-title').value = item.title;
+  document.getElementById('ei-desc').value = isRes ? (item.src || '') : (item.desc || '');
+  
+  const catSelect = document.getElementById('ei-cat');
+  const validCats = isRes ? state.resCats : state.projCats;
+  catSelect.innerHTML = validCats.map(c => `<option value="${c}" ${c===item.cat ? 'selected' : ''}>${c}</option>`).join('');
+  
+  document.getElementById('edit-item-modal').classList.add('show');
+}
+
+function closeEditItemModal() {
+  document.getElementById('edit-item-modal').classList.remove('show');
+}
+
+function saveItemEdit() {
+  const id = document.getElementById('ei-id').value;
+  const type = document.getElementById('ei-type').value;
+  const newTitle = document.getElementById('ei-title').value.trim();
+  const newDesc = document.getElementById('ei-desc').value.trim();
+  const newCat = document.getElementById('ei-cat').value;
+  
+  if (!newTitle) return alert("Judul tidak boleh kosong!");
+
+  const isRes = type === 'res';
+  const defaultList = isRes ? DEF_RES : DEF_PROJ;
+  const customList = isRes ? state.customRes : state.customProj;
+  
+  let item = customList.find(i => i.id === id);
+  let isDefault = false;
+  
+  if (!item) {
+    item = defaultList.find(i => i.id === id);
+    isDefault = true;
+  }
+  if (!item) return;
+
+  if (isDefault) {
+    // Jika mengedit item bawaan, kita clone jadi kustom dan pindahkan datanya
+    const cloned = { ...item, id: (isRes ? 'cr-' : 'cp-') + Date.now(), title: newTitle, cat: newCat };
+    if(isRes) cloned.src = newDesc; else cloned.desc = newDesc;
+    
+    customList.push(cloned);
+    if (!state.hiddenItems) state.hiddenItems = [];
+    state.hiddenItems.push(id); // Sembunyikan item bawaan yang asli
+    
+    // Transfer status (Rating, Notes, dll)
+    if(isRes) {
+      if(state.resStatus[id]) state.resStatus[cloned.id] = state.resStatus[id];
+      if(state.resRating[id]) state.resRating[cloned.id] = state.resRating[id];
+    } else {
+      if(state.projStatus[id]) state.projStatus[cloned.id] = state.projStatus[id];
+      if(state.projDetails[id]) state.projDetails[cloned.id] = state.projDetails[id];
+    }
+  } else {
+    // Update langsung jika sudah item kustom
+    item.title = newTitle;
+    item.cat = newCat;
+    if(isRes) item.src = newDesc; else item.desc = newDesc;
+  }
+  
+  sv(); closeEditItemModal();
+  if(isRes) renderRes(); else renderProj(); updateCounts();
+}
+
+init();
+function deleteItem(id, e){
+  e.stopPropagation(); 
+  if(!confirm("Hapus item ini dari daftar?")) return;
+  if(!state.hiddenItems) state.hiddenItems = [];
+  state.hiddenItems.push(id); 
+  sv(); renderRes(); renderProj(); updateCounts();
+}
+</script>
+</body>
+</html>
