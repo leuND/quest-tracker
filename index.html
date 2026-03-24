@@ -18,6 +18,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-he
 .hdr-left .name{font-size:20px;font-weight:800;}
 .hdr-left .ttl{font-size:12px;color:var(--amber);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
 .hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
 .lv-badge{display:inline-flex;align-items:center;gap:5px;background:var(--amber-d);border:1px solid var(--amber-b);border-radius:6px;padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);}
 .xp-wrap{min-width:160px;}
 .xp-bar-bg{height:5px;background:var(--bg4);border-radius:99px;overflow:hidden;margin-bottom:3px;}
@@ -203,6 +204,9 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-he
 @media(max-width:560px){.hdr,.content{padding-left:1rem;padding-right:1rem;}.tab-nav{margin:0 -1rem;}.chart-grid{grid-template-columns:1fr;}.pomodoro-widget{bottom:1rem; left:1rem; padding:12px; width:120px;}.pomo-time{font-size:26px;}}
 @media print{.hdr{position:static;border:none;}.tab-nav,.icon-btn,.res-filters,.btn-open,.h-btns,.g-sel,.add-form,.pomodoro-widget{display:none!important;}.panel{display:block!important;}body{background:#fff;color:#000;}.sem-body{display:block!important;}.chart-wrap{display:none;}}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -214,14 +218,16 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-he
       <div class="ttl" id="player-title">Mahasiswa Baru</div>
     </div>
     <div class="hdr-right">
-      <div class="lv-badge">LV <span id="lv-num">1</span></div>
-      <div class="xp-wrap">
-        <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
-        <div class="xp-lbl" id="xp-lbl">0 / 200 XP</div>
-      </div>
-      <button class="icon-btn" id="theme-btn" title="Toggle tema" onclick="toggleTheme()">☀</button>
-      <button class="icon-btn" title="Sync Data" onclick="toggleSyncMenu()">🔄</button>
-    </div>
+  <div class="lv-badge">LV <span id="lv-num">1</span></div>
+  <div class="xp-wrap">
+    <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+    <div class="xp-lbl" id="xp-lbl">0 / 200 XP</div>
+  </div>
+  <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">☀</button>
+  <button class="icon-btn" title="Export / Print" onclick="window.print()">⬇</button>
+  <button id="auth-btn" onclick="toggleAuth()" class="icon-btn" title="Login dengan Google">👤</button>
+  <span id="auth-info" style="display:none;font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;"></span>
+</div>
   </div>
   <div class="tab-nav" id="tab-nav"></div>
 </div>
@@ -385,6 +391,70 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-he
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+// ─── FIREBASE ────────────────────────────────────────────────────────────────
+firebase.initializeApp({
+  apiKey: "AIzaSyAPDkm7Ih6BdHJjqP3AHD0EIy-bVCC7jUM",
+  authDomain: "quest-log-1704b.firebaseapp.com",
+  projectId: "quest-log-1704b",
+  storageBucket: "quest-log-1704b.firebasestorage.app",
+  messagingSenderId: "60019907131",
+  appId: "1:60019907131:web:f97495a976b57aa0839a1e"
+});
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser = null;
+
+function toggleAuth() {
+  if (currentUser) {
+    if (confirm('Logout?')) auth.signOut();
+  } else {
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
+}
+
+auth.onAuthStateChanged(async (user) => {
+  currentUser = user;
+  const btn = document.getElementById('auth-btn');
+  const info = document.getElementById('auth-info');
+  if (user) {
+    btn.textContent = '🔓';
+    btn.title = 'Logout';
+    info.style.display = 'block';
+    info.textContent = user.displayName.split(' ')[0];
+    await loadFromCloud();
+  } else {
+    btn.textContent = '👤';
+    btn.title = 'Login dengan Google';
+    info.style.display = 'none';
+  }
+});
+
+async function sv() {
+  localStorage.setItem('bio_q_v2', JSON.stringify(state));
+  if (!currentUser) return;
+  try {
+    await db.collection('users').doc(currentUser.uid)
+      .collection('data').doc('state').set(state);
+  } catch(e) { console.error('Sync gagal:', e); }
+}
+
+async function loadFromCloud() {
+  if (!currentUser) return;
+  try {
+    const doc = await db.collection('users').doc(currentUser.uid)
+      .collection('data').doc('state').get();
+    if (doc.exists) state = { ...loadState(), ...doc.data() };
+    updateHeader(calcXP());
+    renderMainStats();
+    renderMain();
+    renderSide();
+    renderAch();
+    renderRes();
+    renderCourses();
+    renderHabits();
+    updateCounts();
+  } catch(e) { console.error('Load gagal:', e); }
+}
 // DATA STRUCTURES
 const LEVELS=[{lv:1,min:0,title:"Mahasiswa Baru"},{lv:2,min:200,title:"Curious Engineer"},{lv:3,min:500,title:"Signal Seeker"},{lv:4,min:900,title:"Instrumentation Builder"},{lv:5,min:1400,title:"Biomedical Engineer"},{lv:6,min:2000,title:"Clinical Technologist"},{lv:7,min:2600,title:"Biomedical Instrumentation Engineer"}];
 const FASES=[{id:"f1",e:"🔧",t:"Fase 1 — Repair & Solidify",s:"Sem 2–3"},{id:"f2",e:"📡",t:"Fase 2 — Biosignal Stack",s:"Sem 3–4"},{id:"f3",e:"🧬",t:"Fase 3 — Domain & Riset",s:"Sem 4–5"},{id:"f4",e:"🏥",t:"Fase 4 — Clinical Bridge",s:"Sem 5–7"}];
