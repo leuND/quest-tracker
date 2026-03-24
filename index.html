@@ -431,10 +431,15 @@ auth.onAuthStateChanged(async (user) => {
 
 async function sv() {
   localStorage.setItem('bio_q_v2', JSON.stringify(state));
-  if (!currentUser) return;
+  if (!currentUser) {
+    console.log('sv: tidak ada user, skip cloud');
+    return;
+  }
+  console.log('sv: menyimpan ke Firestore untuk user', currentUser.uid);
   try {
     await db.collection('users').doc(currentUser.uid)
       .collection('data').doc('state').set(state);
+    console.log('sv: berhasil sync ke Firestore');
   } catch(e) { console.error('Sync gagal:', e); }
 }
 
